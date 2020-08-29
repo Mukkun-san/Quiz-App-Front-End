@@ -8,9 +8,10 @@
       <v-switch v-model="altLabels" label="altLabels"></v-switch>
       <v-switch v-model="editable" label="Editable"></v-switch>
     </v-row>
+
     <v-stepper v-model="e1" :vertical="vertical" :alt-labels="altLabels">
       <template v-if="vertical">
-        <template v-for="n in steps">
+        <template v-for="n in (steps-1)">
           <v-stepper-step
             :key="`${n}-step`"
             :complete="e1 > n"
@@ -19,13 +20,13 @@
           >{{NewQuiz[n-1].Question}}</v-stepper-step>
 
           <v-stepper-content :key="`${n}-content`" :step="n">
-            <v-radio-group class="ml-6">
+            <v-radio-group v-model="answer" class="ml-6">
               <v-radio :label="NewQuiz[n-1].A" :value="NewQuiz[n-1].A"></v-radio>
               <v-radio :label="NewQuiz[n-1].B" :value="NewQuiz[n-1].B"></v-radio>
               <v-radio :label="NewQuiz[n-1].C" :value="NewQuiz[n-1].C"></v-radio>
               <v-radio :label="NewQuiz[n-1].D" :value="NewQuiz[n-1].D"></v-radio>
             </v-radio-group>
-            <v-btn color="primary" @click="e1++">Continue</v-btn>
+            <v-btn color="primary" @click="click();">Continue</v-btn>
           </v-stepper-content>
         </template>
       </template>
@@ -68,30 +69,36 @@ export default {
   },
   data() {
     return {
+      answer: null,
+      Answers: [],
+
       ready: false,
       e1: 1,
-      steps: 2,
+      steps: 20,
       vertical: true,
       altLabels: false,
       editable: false
     };
   },
-
+  methods: {
+    click() {
+      this.Answers.push(this.answer);
+      console.log(this.Answers);
+      this.e1++;
+    }
+  },
   watch: {
-    steps(val) {
-      if (this.e1 > val) {
-        this.e1 = val;
-      }
-    },
     vertical() {
       this.e1 = 2;
       requestAnimationFrame(() => (this.e1 = 1)); // Workarounds
     }
   },
+  beforeMount() {
+    this.steps = this.nbQs;
+  },
   mounted() {
     this.$nextTick(function(x) {
       this.ready = true;
-      this.steps = this.nbQs;
     });
   }
 };

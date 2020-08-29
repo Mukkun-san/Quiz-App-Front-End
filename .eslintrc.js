@@ -11,6 +11,8 @@ module.exports = {
     parser: 'babel-eslint'
   },
   rules: {
+    'no-unused-vars': 'warn',
+    'prefer-const': 'warn',
     'space-before-function-paren': 'off',
     eqeqeq: 'off',
     semi: 'warn',

@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-if="!ready">
-      <v-img
-        height="200"
-        width="200"
-        src="https://miro.medium.com/max/882/1*9EBHIOzhE1XfMYoKz1JcsQ.gif"
-      ></v-img>
+      <v-row class="mt-6" align="center" justify="center">
+        <v-col cols="12">
+          <v-img height="200" width="200" src="../assets/loading.gif"></v-img>
+        </v-col>
+      </v-row>
     </div>
     <div v-else-if="stp1==1">
       <v-stepper v-model="stp1" :vertical="true">
@@ -30,6 +30,7 @@
               <v-col sm="4">
                 <v-text-field
                   type="number"
+                  min="5"
                   v-model="nbQs"
                   label="Number of Questions"
                   :rules="rules.required"
@@ -91,15 +92,28 @@ export default {
       });
   },
   methods: {
+    shuffle(arr) {
+      let tempArr = [];
+      let exist = [];
+      let rand = Math.floor(Math.random() * arr.length);
+      tempArr.push(arr);
+      return arr;
+    },
     verify() {
       if (this.validForm) {
         this.Sheets.forEach(el => {
           if (el.sheet == this.className) {
             console.log(el.Questions);
-            this.NewQuiz = el.Questions;
+            if (this.nbQs > el.Questions.length) {
+              console.log(this.nbQs + " > " + el.Questions.length);
+              this.nbQs = el.Questions.length;
+            } else {
+              this.nbQs++;
+              console.log(this.nbQs + " < " + el.Questions.length);
+            }
+            this.NewQuiz = this.shuffle(el.Questions);
           }
         });
-        console.log();
         this.stp1 = 2;
         this.error = false;
       } else {
