@@ -12,40 +12,46 @@
       </v-row>
     </v-container>
     <div v-else-if="stp1==1">
-      <v-stepper v-model="stp1" :vertical="true">
-        <v-stepper-step :complete="(stp1 > 1) && validForm" :step="1">Enter Information</v-stepper-step>
-
-        <v-stepper-content :step="1">
+      <v-row align="center" justify="center" class="mt-10">
+        <v-card width="650" class="py-10 pl-10">
           <v-form @submit.prevent ref="form" v-model="validForm">
             <v-row>
-              <v-col sm="4" md="3">
-                <v-text-field label="Name" v-model="name" :rules="rules.required"></v-text-field>
+              <v-col sm="6">
+                <h3>Enter your Name:</h3>
+                <v-text-field placeholder="name" v-model="name" :rules="rules.required"></v-text-field>
               </v-col>
+            </v-row>
 
-              <v-col sm="4">
-                <v-select
-                  :items="ranges"
-                  v-model="className"
-                  label="Class Name"
-                  :rules="rules.required"
-                ></v-select>
-              </v-col>
-
-              <v-col sm="4">
+            <v-row>
+              <v-col sm="6">
+                <h3>Enter your Email:</h3>
                 <v-text-field
-                  type="number"
-                  min="5"
-                  v-model="nbQs"
-                  label="Number of Questions"
-                  :rules="rules.required"
+                  placeholder="email"
+                  v-model="email"
+                  :rules="[rules.required,rules.email]"
                 ></v-text-field>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col sm="4">
+                <h3>Select your Class:</h3>
+                <v-select :items="ranges" v-model="className" :rules="rules.required"></v-select>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col sm="6">
+                <h3>How many Questions?</h3>
+
+                <v-text-field type="number" min="5" v-model="nbQs" :rules="rules.required"></v-text-field>
               </v-col>
             </v-row>
           </v-form>
           <p class="red--text" v-if="error">Please Fill all fields</p>
           <v-btn color="primary" @click="verify()">Start Quiz</v-btn>
-        </v-stepper-content>
-      </v-stepper>
+        </v-card>
+      </v-row>
     </div>
     <div v-else>
       <quiz :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :name="name" />
@@ -70,13 +76,17 @@ export default {
       className: null,
       name: null,
       nbQs: null,
+      email: null,
 
       ranges: [],
       Sheets: [],
       NewQuiz: [],
       rules: {
         required: [value => !!value || "Required."],
-        maxLength: [value => (value || "").length <= 20 || "Max 20 characters"]
+        email: value => {
+          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Invalid e-mail.";
+        }
       }
     };
   },
@@ -101,27 +111,26 @@ export default {
       const tempArr = [];
       const exist = [];
       let rand = Math.floor(Math.random() * arr.length);
-      while (tempArr.length < arr.length) {
+      var test = [];
+      let k = 1;
+      while (tempArr.length < this.nbQs) {
         while (exist.includes(rand)) {
           rand = Math.floor(Math.random() * arr.length);
         }
         exist.push(rand);
-        tempArr.push(arr[rand]);
+        test = arr[rand];
+        test.n = k;
+        k++;
+        tempArr.push(test);
       }
-
-      return arr;
+      return tempArr;
     },
     verify() {
       if (this.validForm) {
         this.Sheets.forEach(el => {
           if (el.sheet == this.className) {
-            console.log(el.Questions);
             if (this.nbQs > el.Questions.length) {
-              console.log(this.nbQs + " > " + el.Questions.length);
               this.nbQs = el.Questions.length;
-            } else {
-              this.nbQs++;
-              console.log(this.nbQs + " < " + el.Questions.length);
             }
             this.NewQuiz = this.shuffle(el.Questions);
           }

@@ -61,12 +61,23 @@ export default {
       }
       return `${minutes}:${seconds}`;
     },
+    formattedTimePassed() {
+      const timePassed = this.timePassed;
+      const minutes = Math.floor(timePassed / 60);
+      let seconds = timePassed % 60;
+      if (seconds < 10) {
+        seconds = `0${seconds}`;
+      }
+      return `${minutes}:${seconds}`;
+    },
     timeLeft() {
-      return TIME_LIMIT - this.timePassed;
+      return TIME_LIMIT * this.nbQs - this.timePassed;
     },
     timeFraction() {
-      const rawTimeFraction = this.timeLeft / TIME_LIMIT;
-      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+      const rawTimeFraction = this.timeLeft / (TIME_LIMIT * this.nbQs);
+      return (
+        rawTimeFraction - (1 / (TIME_LIMIT * this.nbQs)) * (1 - rawTimeFraction)
+      );
     },
     remainingPathColor() {
       const { alert, warning, info } = COLOR_CODES;
@@ -81,9 +92,7 @@ export default {
   },
   watch: {
     timePassed() {
-      this.$emit("timePassed", this.timePassed);
-      if (this.timePassed == TIME_LIMIT) {
-      }
+      this.$emit("timePassed", this.timePassed, this.formattedTimePassed);
     },
     timeLeft(newValue) {
       if (newValue === 0) {
@@ -110,7 +119,7 @@ export default {
   position: fixed;
   z-index: 2000;
   top: 50px;
-  left: 20px;
+  right: 15%;
   width: 80px;
   height: 80px;
   &__svg {
