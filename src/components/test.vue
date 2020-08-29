@@ -1,12 +1,16 @@
 <template>
   <div>
-    <div v-if="!ready">
-      <v-row class="mt-6" align="center" justify="center">
+    <v-container v-if="!ready" fluid>
+      <v-row>
         <v-col cols="12">
-          <v-img height="200" width="200" src="../assets/loading.gif"></v-img>
+          <v-row align="center" justify="center" class="grey lighten-5" style="height: 300px;">
+            <div class="ma-3 pa-6">
+              <v-img height="50" width="50" src="../assets/loading.gif"></v-img>
+            </div>
+          </v-row>
         </v-col>
       </v-row>
-    </div>
+    </v-container>
     <div v-else-if="stp1==1">
       <v-stepper v-model="stp1" :vertical="true">
         <v-stepper-step :complete="(stp1 > 1) && validForm" :step="1">Enter Information</v-stepper-step>
@@ -43,7 +47,9 @@
         </v-stepper-content>
       </v-stepper>
     </div>
-    <quiz v-else :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :name="name" />
+    <div v-else>
+      <quiz :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :name="name" />
+    </div>
   </div>
 </template>
 
@@ -79,7 +85,7 @@ export default {
   },
   beforeMount: function() {
     axios
-      .get("http://localhost:3000")
+      .get("https://quizappexcel.herokuapp.com/")
       .then(res => {
         const temp = res.data;
         this.ranges = temp[0];
@@ -93,10 +99,18 @@ export default {
   },
   methods: {
     shuffle(arr) {
-      let tempArr = [];
-      let exist = [];
+      const tempArr = [];
+      const exist = [];
       let rand = Math.floor(Math.random() * arr.length);
-      tempArr.push(arr);
+      while (tempArr.length < arr.length) {
+        while (exist.includes(rand)) {
+          rand = Math.floor(Math.random() * arr.length);
+        }
+        exist.push(rand);
+        tempArr.push(arr[rand]);
+      }
+
+      console.log(arr, "temp", tempArr);
       return arr;
     },
     verify() {
@@ -123,6 +137,3 @@ export default {
   }
 };
 </script>
-
-<style>
-</style>

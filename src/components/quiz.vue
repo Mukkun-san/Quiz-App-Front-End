@@ -1,64 +1,70 @@
 <template>
-  <div>
-    <v-row style="visibility:hidden; display:none">
-      <v-col cols="12">
-        <v-slider v-model="steps" label="steps" min="2" max="20"></v-slider>
-      </v-col>
-      <v-switch v-model="vertical" label="Vertical"></v-switch>
-      <v-switch v-model="altLabels" label="altLabels"></v-switch>
-      <v-switch v-model="editable" label="Editable"></v-switch>
-    </v-row>
+  <v-container fluid>
+    <v-row justify="center" align="center">
+      <timer @timePassed="getTime" />
+      <v-card width="1000" class="mt-6">
+        <v-row style="visibility:hidden; display:none">
+          <v-col cols="12">
+            <v-slider v-model="steps" label="steps" min="2" max="20"></v-slider>
+          </v-col>
+          <v-switch v-model="vertical" label="Vertical"></v-switch>
+          <v-switch v-model="altLabels" label="altLabels"></v-switch>
+          <v-switch v-model="editable" label="Editable"></v-switch>
+        </v-row>
 
-    <v-stepper v-model="e1" :vertical="vertical" :alt-labels="altLabels">
-      <template v-if="vertical">
-        <template v-for="n in (steps-1)">
-          <v-stepper-step
-            :key="`${n}-step`"
-            :complete="e1 > n"
-            :step="n"
-            :editable="editable"
-          >{{NewQuiz[n-1].Question}}</v-stepper-step>
+        <v-stepper v-model="e1" :vertical="vertical" :alt-labels="altLabels">
+          <template v-if="vertical">
+            <template v-for="n in (steps-1)">
+              <v-stepper-step
+                :key="`${n}-step`"
+                :complete="e1 > n"
+                :step="n"
+                :editable="editable"
+              >{{NewQuiz[n-1].Question}}</v-stepper-step>
 
-          <v-stepper-content :key="`${n}-content`" :step="n">
-            <v-radio-group v-model="answer" class="ml-6">
-              <v-radio :label="NewQuiz[n-1].A" :value="NewQuiz[n-1].A"></v-radio>
-              <v-radio :label="NewQuiz[n-1].B" :value="NewQuiz[n-1].B"></v-radio>
-              <v-radio :label="NewQuiz[n-1].C" :value="NewQuiz[n-1].C"></v-radio>
-              <v-radio :label="NewQuiz[n-1].D" :value="NewQuiz[n-1].D"></v-radio>
-            </v-radio-group>
-            <v-btn color="primary" @click="click();">Continue</v-btn>
-          </v-stepper-content>
-        </template>
-      </template>
-      <template v-else>
-        <v-stepper-header>
-          <template v-for="n in steps">
-            <v-stepper-step
-              :key="`${n}-step`"
-              :complete="e1 > n"
-              :step="n"
-              :editable="editable"
-            >Step {{ n }}</v-stepper-step>
-
-            <v-divider v-if="n !== steps" :key="n"></v-divider>
+              <v-stepper-content :key="`${n}-content`" :step="n">
+                <v-radio-group v-model="answer" class="ml-6">
+                  <v-radio :label="NewQuiz[n-1].A" :value="NewQuiz[n-1].A"></v-radio>
+                  <v-radio :label="NewQuiz[n-1].B" :value="NewQuiz[n-1].B"></v-radio>
+                  <v-radio :label="NewQuiz[n-1].C" :value="NewQuiz[n-1].C"></v-radio>
+                  <v-radio :label="NewQuiz[n-1].D" :value="NewQuiz[n-1].D"></v-radio>
+                </v-radio-group>
+                <v-btn color="primary" @click="click();">Continue</v-btn>
+              </v-stepper-content>
+            </template>
           </template>
-        </v-stepper-header>
+          <template v-else>
+            <v-stepper-header>
+              <template v-for="n in steps">
+                <v-stepper-step
+                  :key="`${n}-step`"
+                  :complete="e1 > n"
+                  :step="n"
+                  :editable="editable"
+                >Step {{ n }}</v-stepper-step>
 
-        <v-stepper-items>
-          <v-stepper-content v-for="n in steps" :key="`${n}-content`" :step="n">
-            <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
+                <v-divider v-if="n !== steps" :key="n"></v-divider>
+              </template>
+            </v-stepper-header>
 
-            <v-btn color="primary" @click="nextStep(n)">Continue</v-btn>
+            <v-stepper-items>
+              <v-stepper-content v-for="n in steps" :key="`${n}-content`" :step="n">
+                <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
 
-            <v-btn text>Cancel</v-btn>
-          </v-stepper-content>
-        </v-stepper-items>
-      </template>
-    </v-stepper>
-  </div>
+                <v-btn color="primary" @click="nextStep(n)">Continue</v-btn>
+
+                <v-btn text>Cancel</v-btn>
+              </v-stepper-content>
+            </v-stepper-items>
+          </template>
+        </v-stepper>
+      </v-card>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
+import timer from "./timer";
 export default {
   name: "quiz",
   props: {
@@ -67,10 +73,14 @@ export default {
     name: String,
     className: [String, Number]
   },
+  components: {
+    timer
+  },
   data() {
     return {
       answer: null,
       Answers: [],
+      passedTime: null,
 
       ready: false,
       e1: 1,
@@ -81,6 +91,9 @@ export default {
     };
   },
   methods: {
+    getTime: function(val) {
+      this.passedTime = val;
+    },
     click() {
       this.Answers.push(this.answer);
       console.log(this.Answers);

@@ -6,18 +6,18 @@
 
 <script>
 // @ is an alias to /src
-import test from "@/components/test.vue";
+import test from "@/components/test.vue"
 
 export default {
   name: "Home",
   data() {
-    return {};
+    return {}
   },
   components: {
     test
   },
   mounted() {
-    this.$nextTick(function() {});
+    this.$nextTick(function() {})
   }
-};
+}
 </script>
