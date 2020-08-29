@@ -91,7 +91,6 @@ export default {
         this.ranges = temp[0];
         temp.shift();
         this.Sheets = temp;
-        console.log(this.Sheets);
       })
       .then(res => {
         this.ready = true;
@@ -110,7 +109,6 @@ export default {
         tempArr.push(arr[rand]);
       }
 
-      console.log(arr, "temp", tempArr);
       return arr;
     },
     verify() {

@@ -1,20 +1,22 @@
 <template>
   <v-container fluid>
-    <v-row justify="center" align="center">
-      <timer @timePassed="getTime" />
+    {{steps}}
+    {{nbQs}}
+    <v-row v-if="(this.e1 <= this.steps - 1)" justify="center" align="center">
+      <timer @timePassed="getTime" :nbQs="parseInt(nbQs)" />
       <v-card width="1000" class="mt-6">
         <v-row style="visibility:hidden; display:none">
           <v-col cols="12">
-            <v-slider v-model="steps" label="steps" min="2" max="20"></v-slider>
+            <v-slider v-model="steps" label="steps"></v-slider>
           </v-col>
           <v-switch v-model="vertical" label="Vertical"></v-switch>
           <v-switch v-model="altLabels" label="altLabels"></v-switch>
           <v-switch v-model="editable" label="Editable"></v-switch>
         </v-row>
 
-        <v-stepper v-model="e1" :vertical="vertical" :alt-labels="altLabels">
+        <v-stepper v-model="e1" vertical>
           <template v-if="vertical">
-            <template v-for="n in (steps-1)">
+            <template v-for="n in steps">
               <v-stepper-step
                 :key="`${n}-step`"
                 :complete="e1 > n"
@@ -84,7 +86,7 @@ export default {
 
       ready: false,
       e1: 1,
-      steps: 20,
+      steps: null,
       vertical: true,
       altLabels: false,
       editable: false
@@ -104,6 +106,11 @@ export default {
     vertical() {
       this.e1 = 2;
       requestAnimationFrame(() => (this.e1 = 1)); // Workarounds
+    },
+    e1() {
+      if (this.e1 > this.steps - 1) {
+        alert("done");
+      }
     }
   },
   beforeMount() {

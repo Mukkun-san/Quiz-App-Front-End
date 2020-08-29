@@ -37,8 +37,11 @@ const COLOR_CODES = {
     threshold: ALERT_THRESHOLD
   }
 };
-const TIME_LIMIT = 100;
+const TIME_LIMIT = 15;
 export default {
+  props: {
+    nbQs: Number
+  },
   data() {
     return {
       timePassed: 0,
@@ -79,6 +82,8 @@ export default {
   watch: {
     timePassed() {
       this.$emit("timePassed", this.timePassed);
+      if (this.timePassed == TIME_LIMIT) {
+      }
     },
     timeLeft(newValue) {
       if (newValue === 0) {
