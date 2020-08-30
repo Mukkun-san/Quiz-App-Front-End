@@ -43,8 +43,7 @@
             <v-row>
               <v-col sm="6">
                 <h3>How many Questions?</h3>
-
-                <v-text-field type="number" min="5" v-model="nbQs" :rules="rules.required"></v-text-field>
+                <v-select :items="[5,10,15,20,25,30,35,40]" v-model="nbQs" :rules="rules.required"></v-select>
               </v-col>
             </v-row>
           </v-form>
@@ -54,7 +53,7 @@
       </v-row>
     </div>
     <div v-else>
-      <quiz :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :name="name" />
+      <quiz :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :email="email" :name="name" />
     </div>
   </div>
 </template>

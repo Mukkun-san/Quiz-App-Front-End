@@ -2,67 +2,29 @@
   <v-container fluid>
     <v-row v-if="e1 <= NewQuiz.length" justify="center" align="center">
       <timer @timePassed="getTime" :nbQs="parseInt(nbQs)" @timeOver="alert('f')" />
-      <v-card width="1000" class="mt-6">
-        <v-row style="visibility:hidden; display:none">
-          <v-col cols="12">
-            <v-slider v-model="steps" label="steps"></v-slider>
-          </v-col>
-          <v-switch v-model="vertical" label="Vertical"></v-switch>
-          <v-switch v-model="altLabels" label="altLabels"></v-switch>
-          <v-switch v-model="editable" label="Editable"></v-switch>
-        </v-row>
-
-        <v-stepper v-if="ready" v-model="e1" vertical>
-          <template v-if="vertical">
-            <template v-for="Qs in NewQuiz">
-              <v-stepper-step
-                :key="`${Qs.Question}-qs`"
-                :complete="e1 > Qs.n"
-                :step="Qs.n"
-                :editable="editable"
-              >{{Qs.Question}}</v-stepper-step>
-
-              <v-stepper-content :key="`${Qs.Question}-c`" :step="Qs.n">
-                <v-radio-group v-model="answer" class="ml-6">
-                  <v-radio :label="Qs.A.toString()" :value="Qs.A.toString()"></v-radio>
-                  <v-radio :label="Qs.B.toString()" :value="Qs.B.toString()"></v-radio>
-                  <v-radio :label="Qs.C.toString()" :value="Qs.C.toString()"></v-radio>
-                  <v-radio :label="Qs.D.toString()" :value="Qs.D.toString()"></v-radio>
-                </v-radio-group>
-                <v-btn v-if="Qs.n < NewQuiz.length" color="primary" @click="click();">Next</v-btn>
-                <v-btn v-else color="green" @click="click();">Finish the Quiz</v-btn>
-              </v-stepper-content>
-            </template>
-          </template>
-          <template v-else>
-            <v-stepper-header>
-              <template v-for="n in steps">
-                <v-stepper-step
-                  :key="`${n}-step`"
-                  :complete="e1 > n"
-                  :step="n"
-                  :editable="editable"
-                >Step {{ n }}</v-stepper-step>
-
-                <v-divider v-if="n !== steps" :key="n"></v-divider>
-              </template>
-            </v-stepper-header>
-
-            <v-stepper-items>
-              <v-stepper-content v-for="n in steps" :key="`${n}-content`" :step="n">
-                <v-card class="mb-12" color="grey lighten-1" height="200px"></v-card>
-
-                <v-btn color="primary" @click="nextStep(n)">Continue</v-btn>
-
-                <v-btn text>Cancel</v-btn>
-              </v-stepper-content>
-            </v-stepper-items>
+      <v-card width="1000" class="mt-6 mx-16">
+        <v-stepper v-if="ready" v-model="e1" :vertical="false">
+          <template v-for="Qs in NewQuiz">
+            <v-stepper-content :key="`${Qs.Question}-c`" :step="Qs.n">
+              <h3>
+                <b>{{Qs.n}}-</b>
+                {{Qs.Question}}:
+              </h3>
+              <v-radio-group v-model="answer" class="ml-6">
+                <v-radio :label="Qs.A.toString()" :value="Qs.A.toString()"></v-radio>
+                <v-radio :label="Qs.B.toString()" :value="Qs.B.toString()"></v-radio>
+                <v-radio :label="Qs.C.toString()" :value="Qs.C.toString()"></v-radio>
+                <v-radio :label="Qs.D.toString()" :value="Qs.D.toString()"></v-radio>
+              </v-radio-group>
+              <v-btn v-if="Qs.n < NewQuiz.length" color="primary" @click="click();">Next</v-btn>
+              <v-btn v-else color="green" @click="click();">Finish the Quiz</v-btn>
+            </v-stepper-content>
           </template>
         </v-stepper>
       </v-card>
     </v-row>
     <v-row v-else>
-      <v-card width="100vw" class="mx-5 px-10">
+      <v-card width="100vw" class="mx-5 px-10 elevation-12">
         <div>
           <h1 class="text-center display-3 py-10">Quiz Result</h1>
           <h1 class="font-weight-regular">
@@ -89,15 +51,20 @@
           :headers="tabHeaders"
           :items="Results"
           :items-per-page="5"
-          class="px-5 py-5 elevation-8"
+          class="px-5 py-5"
           style="font-size:100px;"
         ></v-data-table>
 
         <br />
         <div class="mx-5 my-5">
+          <h2>Additional Information:</h2>
           <h2 class="font-weight-regular">
             Name:
             <b>{{name}}</b>
+          </h2>
+          <h2 class="font-weight-regular">
+            Email:
+            <b>{{email}}</b>
           </h2>
           <h2 class="font-weight-regular">
             Class:
@@ -120,13 +87,15 @@
 
 <script>
 import timer from "./timer";
+import axios from "axios";
 export default {
   name: "quiz",
   props: {
     NewQuiz: Array,
     nbQs: [String, Number],
     name: String,
-    className: [String, Number]
+    className: [String, Number],
+    email: String
   },
   components: {
     timer
@@ -156,11 +125,7 @@ export default {
 
       ready: false,
       e1: 1,
-      steps: null,
-
-      vertical: true,
-      altLabels: false,
-      editable: false
+      steps: null
     };
   },
   methods: {
@@ -169,7 +134,11 @@ export default {
       let WA = 0;
       console.log(this.Answers);
       for (let i = 0; i < this.NewQuiz.length; i++) {
-        if (this.Answers[i] == this.NewQuiz[i].Correct_Answer) {
+        if (
+          this.Answers[i] &&
+          this.Answers[i].toUpperCase() ==
+            this.NewQuiz[i].Correct_Answer.toUpperCase()
+        ) {
           CA++;
         } else {
           WA++;
@@ -183,13 +152,29 @@ export default {
       this.answerCount.C = CA;
       this.answerCount.W = WA;
       this.Grade =
-        (Math.floor((CA / this.NewQuiz.length) * 100) / 100) * 100 + "/100";
+        (Math.floor((CA / this.NewQuiz.length) * 100) / 100) * 100 + "%";
       this.date = new Date().toUTCString();
+      axios
+        .post("https://quizappexcel.herokuapp.com/sheet", {
+          name: this.name,
+          email: this.email,
+          class: this.className,
+          date: this.date,
+          nbQs: this.nbQs,
+          time: this.parsedTime,
+          score: this.Grade
+        })
+        .then(function(response) {
+          console.log(response);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
     getTime: function(raw, parsed) {
       this.passedTime = raw;
       this.parsedTime = parsed;
-      if (raw == 10 * this.nbQs) {
+      if (raw == 15 * this.nbQs) {
         alert("time ran out");
         this.e1 = this.NewQuiz.length;
         this.click();
@@ -204,13 +189,6 @@ export default {
       this.answer = null;
     }
   },
-  watch: {
-    vertical() {
-      this.e1 = 2;
-      requestAnimationFrame(() => (this.e1 = 1)); // Workarounds
-    },
-    e1() {}
-  },
   beforeMount() {
     this.steps = this.nbQs;
   },
@@ -222,22 +200,26 @@ export default {
 };
 </script>
 <style>
-th,
-td,
-tr {
-  padding: 20px !important;
-  border-top: 2px solid rgb(71, 71, 71);
-  border-bottom: 2px solid rgb(71, 71, 71);
-}
-th {
-  font-size: 25px !important;
-}
-td {
-  font-size: 20px !important;
-}
-.v-data-footer,
-.v-input__append-inner,
-.v-select__selection .v-select__selection--comma {
-  font-size: 18px !important;
+@media screen and (min-width: 600px) {
+  th {
+    padding: 20px !important;
+  }
+  td,
+  tr {
+    padding: 20px !important;
+    border-top: 1px solid rgb(71, 71, 71);
+    border-bottom: 1px solid rgb(71, 71, 71);
+  }
+  th {
+    font-size: 25px !important;
+  }
+  td {
+    font-size: 20px !important;
+  }
+  .v-data-footer,
+  .v-input__append-inner,
+  .v-select__selection .v-select__selection--comma {
+    font-size: 18px !important;
+  }
 }
 </style>
