@@ -8,7 +8,7 @@
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 10;
 const ALERT_THRESHOLD = 5;
-const TIME_LIMIT = 115;
+const TIME_LIMIT = 15;
 const COLOR_CODES = {
   info: {
     color: "primary"
