@@ -13,42 +13,65 @@
     </v-container>
     <div v-else-if="stp1==1">
       <v-row align="center" justify="center" class="mt-10">
-        <v-card width="650" class="py-10 pl-10">
+        <v-card width="700" class="elevation-6 py-5 pl-10 pr-10">
           <v-form @submit.prevent ref="form" v-model="validForm">
             <v-row>
               <v-col sm="6">
                 <h3>Enter your Name:</h3>
-                <v-text-field placeholder="name" v-model="name" :rules="rules.required"></v-text-field>
+                <v-col sm="10">
+                  <v-text-field
+                    color="#62D969"
+                    placeholder="name"
+                    v-model="name"
+                    :rules="rules.required"
+                  ></v-text-field>
+                </v-col>
               </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col sm="6">
-                <h3>Enter your Email:</h3>
-                <v-text-field
-                  placeholder="email"
-                  v-model="email"
-                  :rules="[rules.required,rules.email]"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-
-            <v-row>
               <v-col sm="4">
                 <h3>Select your Class:</h3>
-                <v-select :items="ranges" v-model="className" :rules="rules.required"></v-select>
+                <v-col sm="10">
+                  <v-col sm="10">
+                    <v-select
+                      color="#62D969"
+                      :items="ranges"
+                      v-model="className"
+                      :rules="rules.required"
+                    ></v-select>
+                  </v-col>
+                </v-col>
               </v-col>
             </v-row>
 
             <v-row>
               <v-col sm="6">
+                <h3>Enter your Email to get Questions:</h3>
+                <v-col sm="10">
+                  <v-text-field
+                    color="#62D969"
+                    width="10"
+                    placeholder="email"
+                    v-model="email"
+                    :rules="[rules.required,rules.email]"
+                  ></v-text-field>
+                </v-col>
+              </v-col>
+              <v-col v-if="email" sm="6">
                 <h3>How many Questions?</h3>
-                <v-select :items="[5,10,15,20,25,30,35,40]" v-model="nbQs" :rules="rules.required"></v-select>
+                <v-col sm="5">
+                  <v-select
+                    color="#62D969"
+                    :items="[5,10,15,20,25,30,35,40]"
+                    v-model="nbQs"
+                    :rules="rules.required"
+                  ></v-select>
+                </v-col>
               </v-col>
             </v-row>
           </v-form>
-          <p class="red--text" v-if="error">Please Fill all fields</p>
-          <v-btn color="primary" @click="verify()">Start Quiz</v-btn>
+          <div class="text-center">
+            <p class="red--text" v-if="error">Please Fill all fields</p>
+            <v-btn class="white--text v-size--large" color="#62D969" @click="verify()">Start Quiz</v-btn>
+          </div>
         </v-card>
       </v-row>
     </div>
@@ -143,3 +166,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+h3 {
+  font-weight: 300;
+}
+</style>

@@ -1,21 +1,5 @@
 <template>
   <div class="base-timer">
-    <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <g class="base-timer__circle">
-        <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45" />
-        <path
-          :stroke-dasharray="circleDasharray"
-          class="base-timer__path-remaining"
-          :class="remainingPathColor"
-          d="
-            M 50, 50
-            m -45, 0
-            a 45,45 0 1,0 90,0
-            a 45,45 0 1,0 -90,0
-          "
-        />
-      </g>
-    </svg>
     <span class="base-timer__label">{{ formattedTimeLeft }}</span>
   </div>
 </template>
@@ -24,9 +8,10 @@
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 10;
 const ALERT_THRESHOLD = 5;
+const TIME_LIMIT = 115;
 const COLOR_CODES = {
   info: {
-    color: "green"
+    color: "primary"
   },
   warning: {
     color: "orange",
@@ -37,7 +22,6 @@ const COLOR_CODES = {
     threshold: ALERT_THRESHOLD
   }
 };
-const TIME_LIMIT = 15;
 export default {
   props: {
     nbQs: Number
@@ -92,7 +76,12 @@ export default {
   },
   watch: {
     timePassed() {
-      this.$emit("timePassed", this.timePassed, this.formattedTimePassed);
+      this.$emit(
+        "timePassed",
+        this.timePassed,
+        this.formattedTimePassed,
+        TIME_LIMIT
+      );
     },
     timeLeft(newValue) {
       if (newValue === 0) {
@@ -116,12 +105,13 @@ export default {
 
 <style scoped lang="scss">
 .base-timer {
-  position: fixed;
+  position: relative;
   z-index: 2000;
-  top: 50px;
-  right: 15%;
+  right: 1rem;
   width: 80px;
-  height: 80px;
+  height: 20px;
+  padding: 0;
+  margin: 0;
   &__svg {
     transform: scaleX(-1);
   }
@@ -141,11 +131,11 @@ export default {
     transition: 1s linear all;
     fill-rule: nonzero;
     stroke: currentColor;
-    &.green {
-      color: rgb(65, 184, 131);
+    &.primary {
+      color: #62d969;
     }
     &.orange {
-      color: orange;
+      color: #f2b705;
     }
     &.red {
       color: red;
@@ -154,7 +144,6 @@ export default {
   &__label {
     position: absolute;
     width: 80px;
-    height: 80px;
     top: 0;
     display: flex;
     align-items: center;

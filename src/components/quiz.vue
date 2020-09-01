@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <v-row v-if="e1 <= NewQuiz.length" justify="center" align="center">
-      <timer @timePassed="getTime" :nbQs="parseInt(nbQs)" @timeOver="alert('f')" />
       <v-card width="1000" class="mt-6 mx-16">
         <v-stepper v-if="ready" v-model="e1" :vertical="false">
           <template v-for="Qs in NewQuiz">
@@ -16,34 +15,61 @@
                 <v-radio :label="Qs.C.toString()" :value="Qs.C.toString()"></v-radio>
                 <v-radio :label="Qs.D.toString()" :value="Qs.D.toString()"></v-radio>
               </v-radio-group>
-              <v-btn v-if="Qs.n < NewQuiz.length" color="primary" @click="click();">Next</v-btn>
-              <v-btn v-else color="green" @click="click();">Finish the Quiz</v-btn>
+              <v-btn color="#62d969" v-if="Qs.n < NewQuiz.length" @click="click();">Next</v-btn>
+              <v-btn v-else color="#d9a689" @click="click();">Finish the Quiz</v-btn>
             </v-stepper-content>
           </template>
+          <v-progress-linear color="#04b2d4" :value="Math.floor(((e1-1)/nbQs)*100)"></v-progress-linear>
+          <v-card>
+            <v-container>
+              <v-row>
+                <v-col>
+                  <h3 class="pl-10 font-weight-light">
+                    <b>{{Math.floor(((e1-1)/nbQs)*100)}}%</b> Completed
+                  </h3>
+                </v-col>
+                <v-col>
+                  <timer
+                    class="float-right"
+                    @timePassed="getTime"
+                    :nbQs="parseInt(nbQs)"
+                    @timeOver="alert('f')"
+                  />
+                  <p class="float-right pt-2 pr-5">Time Remaining:</p>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card>
         </v-stepper>
       </v-card>
     </v-row>
     <v-row v-else>
       <v-card width="100vw" class="mx-5 px-10 elevation-12">
-        <div>
-          <h1 class="text-center display-3 py-10">Quiz Result</h1>
-          <h1 class="font-weight-regular">
-            Finished in:
-            <b>{{parsedTime}}</b>
-          </h1>
-          <h1 class="font-weight-regular">
-            Correct Answers:
-            <b>{{answerCount.C}}</b>
-          </h1>
-          <h1 class="font-weight-regular">
-            Wrong Answers:
-            <b>{{answerCount.W}}</b>
-          </h1>
-          <h1 class="font-weight-regular">
-            Total Grade:
-            <b>{{Grade}}</b>
-          </h1>
-        </div>
+        <h1 class="text-center display-3 py-10">Quiz Result</h1>
+        <v-container>
+          <v-row>
+            <v-col cols="6" sm="6">
+              <h1 class="font-weight-regular">
+                Finished in:
+                <b>{{parsedTime}}</b>
+              </h1>
+              <h1 class="font-weight-regular">
+                Total Grade:
+                <b>{{Grade}}</b>
+              </h1>
+            </v-col>
+            <v-col cols="6" sm="6">
+              <GChart
+                style="width: 500px; height: 278px;"
+                class="float-right"
+                :settings="{ packages: ['corechart', 'table', 'map'] }"
+                :options="chartOptions.chart"
+                type="PieChart"
+                :data="chartData"
+              />
+            </v-col>
+          </v-row>
+        </v-container>
 
         <br />
 
@@ -88,6 +114,8 @@
 <script>
 import timer from "./timer";
 import axios from "axios";
+import { GChart } from "vue-google-charts";
+
 export default {
   name: "quiz",
   props: {
@@ -98,10 +126,23 @@ export default {
     email: String
   },
   components: {
-    timer
+    timer,
+    GChart
   },
   data() {
     return {
+      chartData: [
+        ["Answer", "Number"],
+        ["Correct", 0],
+        ["Wrong", 0],
+        ["Skipped", 0]
+      ],
+      chartOptions: {
+        chart: {
+          title: "Answers:",
+          colors: ["#28a745", "#dc3545", "#6c757d"]
+        }
+      },
       tabHeaders: [
         {
           text: "Question",
@@ -149,8 +190,9 @@ export default {
           C_Answer: this.NewQuiz[i].Correct_Answer
         });
       }
-      this.answerCount.C = CA;
-      this.answerCount.W = WA;
+      this.answerCount.C = this.chartData[1][1] = CA;
+      this.answerCount.W = this.chartData[2][1] = WA;
+
       this.Grade =
         (Math.floor((CA / this.NewQuiz.length) * 100) / 100) * 100 + "%";
       this.date = new Date().toUTCString();
@@ -171,10 +213,10 @@ export default {
           console.log(error);
         });
     },
-    getTime: function(raw, parsed) {
+    getTime: function(raw, parsed, limit) {
       this.passedTime = raw;
       this.parsedTime = parsed;
-      if (raw == 15 * this.nbQs) {
+      if (raw == limit * this.nbQs) {
         alert("time ran out");
         this.e1 = this.NewQuiz.length;
         this.click();
