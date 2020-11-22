@@ -9,11 +9,14 @@
   },
   "dependencies": {
     "axios": "^0.20.0",
+    "bootstrap": "^4.5.3",
+    "bootstrap-vue": "^2.19.0",
     "core-js": "^3.6.5",
-    "googleapis": "^39.2.0",
+    "googleapis": "^64.0.0",
     "vue": "^2.6.11",
     "vue-google-charts": "^0.3.3",
     "vue-router": "^3.2.0",
+    "vue-sidebar-menu": "^4.7.3",
     "vuetify": "^2.2.11"
   },
   "devDependencies": {
