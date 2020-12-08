@@ -3,15 +3,20 @@
     <v-container v-if="!ready" fluid>
       <v-row>
         <v-col cols="12">
-          <v-row align="center" justify="center" class="grey lighten-5" style="height: 300px;">
+          <v-row
+            align="center"
+            justify="center"
+            class="grey lighten-5"
+            style="height: 300px;"
+          >
             <div class="ma-3 pa-6">
-              <v-img height="50" width="50" src="../assets/loading.gif"></v-img>
+              <v-img height="50" width="50" src="@/assets/loading.gif"></v-img>
             </div>
           </v-row>
         </v-col>
       </v-row>
     </v-container>
-    <div v-else-if="stp1==1">
+    <div v-else-if="stp1 == 1">
       <v-row align="center" justify="center" class="mt-10">
         <v-card width="700" class="elevation-6 py-5 pl-10 pr-10">
           <v-form @submit.prevent ref="form" v-model="validForm">
@@ -51,7 +56,7 @@
                     width="10"
                     placeholder="email"
                     v-model="email"
-                    :rules="[rules.required,rules.email]"
+                    :rules="[rules.required, rules.email]"
                   ></v-text-field>
                 </v-col>
               </v-col>
@@ -60,7 +65,7 @@
                 <v-col sm="5">
                   <v-select
                     color="#62D969"
-                    :items="[5,10,15,20,25,30,35,40]"
+                    :items="[5, 10, 15, 20, 25, 30, 35, 40]"
                     v-model="nbQs"
                     :rules="rules.required"
                   ></v-select>
@@ -70,13 +75,24 @@
           </v-form>
           <div class="text-center">
             <p class="red--text" v-if="error">Please Fill all fields</p>
-            <v-btn class="white--text v-size--large" color="#62D969" @click="verify()">Start Quiz</v-btn>
+            <v-btn
+              class="white--text v-size--large"
+              color="#62D969"
+              @click="verify()"
+              >Start Quiz</v-btn
+            >
           </div>
         </v-card>
       </v-row>
     </div>
     <div v-else>
-      <quiz :nbQs="nbQs" :NewQuiz="NewQuiz" :className="className" :email="email" :name="name" />
+      <quiz
+        :nbQs="nbQs"
+        :NewQuiz="NewQuiz"
+        :className="className"
+        :email="email"
+        :name="name"
+      />
     </div>
   </div>
 </template>
@@ -84,9 +100,10 @@
 <script>
 import quiz from "@/components/quiz.vue";
 import axios from "axios";
+import { API_URL } from "../store/consts";
 
 export default {
-  name: "test",
+  name: "quizForm",
   data() {
     return {
       error: false,
@@ -115,18 +132,21 @@ export default {
   components: {
     quiz
   },
-  beforeMount: function() {
-    axios
-      .get("https://quizappexcel.herokuapp.com/")
-      .then(res => {
-        const temp = res.data;
-        this.ranges = temp[0];
-        temp.shift();
-        this.Sheets = temp;
-      })
-      .then(res => {
-        this.ready = true;
-      });
+  mounted() {
+    this.$nextTick(function() {
+      axios
+        .get(API_URL + "/sheets")
+        .then(res => {
+          console.log(res);
+          const temp = res.data;
+          this.ranges = temp[0];
+          temp.shift();
+          this.Sheets = temp;
+        })
+        .then(() => {
+          this.ready = true;
+        });
+    });
   },
   methods: {
     shuffle(arr) {

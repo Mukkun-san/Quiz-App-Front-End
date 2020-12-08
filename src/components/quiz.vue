@@ -6,26 +6,48 @@
           <template v-for="Qs in NewQuiz">
             <v-stepper-content :key="`${Qs.Question}-c`" :step="Qs.n">
               <h3>
-                <b>{{Qs.n}}-</b>
-                {{Qs.Question}}:
+                <b>{{ Qs.n }}-</b>
+                {{ Qs.Question }}:
               </h3>
               <v-radio-group v-model="answer" class="ml-6">
-                <v-radio :label="Qs.A.toString()" :value="Qs.A.toString()"></v-radio>
-                <v-radio :label="Qs.B.toString()" :value="Qs.B.toString()"></v-radio>
-                <v-radio :label="Qs.C.toString()" :value="Qs.C.toString()"></v-radio>
-                <v-radio :label="Qs.D.toString()" :value="Qs.D.toString()"></v-radio>
+                <v-radio
+                  :label="Qs.A.toString()"
+                  :value="Qs.A.toString()"
+                ></v-radio>
+                <v-radio
+                  :label="Qs.B.toString()"
+                  :value="Qs.B.toString()"
+                ></v-radio>
+                <v-radio
+                  :label="Qs.C.toString()"
+                  :value="Qs.C.toString()"
+                ></v-radio>
+                <v-radio
+                  :label="Qs.D.toString()"
+                  :value="Qs.D.toString()"
+                ></v-radio>
               </v-radio-group>
-              <v-btn color="#62d969" v-if="Qs.n < NewQuiz.length" @click="click();">Next</v-btn>
-              <v-btn v-else color="#d9a689" @click="click();">Finish the Quiz</v-btn>
+              <v-btn
+                color="#62d969"
+                v-if="Qs.n < NewQuiz.length"
+                @click="click()"
+                >Next</v-btn
+              >
+              <v-btn v-else color="#d9a689" @click="click()"
+                >Finish the Quiz</v-btn
+              >
             </v-stepper-content>
           </template>
-          <v-progress-linear color="#04b2d4" :value="Math.floor(((e1-1)/nbQs)*100)"></v-progress-linear>
+          <v-progress-linear
+            color="#04b2d4"
+            :value="Math.floor(((e1 - 1) / nbQs) * 100)"
+          ></v-progress-linear>
           <v-card>
             <v-container>
               <v-row>
                 <v-col>
                   <h3 class="pl-10 font-weight-light">
-                    <b>{{Math.floor(((e1-1)/nbQs)*100)}}%</b> Completed
+                    <b>{{ Math.floor(((e1 - 1) / nbQs) * 100) }}%</b> Completed
                   </h3>
                 </v-col>
                 <v-col>
@@ -51,11 +73,11 @@
             <v-col cols="6" sm="6">
               <h1 class="font-weight-regular">
                 Finished in:
-                <b>{{parsedTime}}</b>
+                <b>{{ parsedTime }}</b>
               </h1>
               <h1 class="font-weight-regular">
                 Total Grade:
-                <b>{{Grade}}</b>
+                <b>{{ Grade }}</b>
               </h1>
             </v-col>
             <v-col cols="6" sm="6">
@@ -86,23 +108,23 @@
           <h2>Additional Information:</h2>
           <h2 class="font-weight-regular">
             Name:
-            <b>{{name}}</b>
+            <b>{{ name }}</b>
           </h2>
           <h2 class="font-weight-regular">
             Email:
-            <b>{{email}}</b>
+            <b>{{ email }}</b>
           </h2>
           <h2 class="font-weight-regular">
             Class:
-            <b>{{className}}</b>
+            <b>{{ className }}</b>
           </h2>
           <h2 class="font-weight-regular">
             Nb Questions:
-            <b>{{nbQs}}</b>
+            <b>{{ nbQs }}</b>
           </h2>
           <h2 class="font-weight-regular">
             Date:
-            <b>{{date}}</b>
+            <b>{{ date }}</b>
             <b></b>
           </h2>
         </div>
@@ -119,7 +141,7 @@ import { GChart } from "vue-google-charts";
 export default {
   name: "quiz",
   props: {
-    NewQuiz: Array,
+    questions: Array,
     nbQs: [String, Number],
     name: String,
     className: [String, Number],
@@ -164,12 +186,33 @@ export default {
       parsedTime: null,
       quiz: null,
 
+      NewQuiz: [],
+
       ready: false,
       e1: 1,
       steps: null
     };
   },
   methods: {
+    shuffle(arr) {
+      console.log(arr);
+      const tempArr = [];
+      const exist = [];
+      let rand = Math.floor(Math.random() * arr.length);
+      var test = [];
+      let k = 1;
+      while (tempArr.length < this.nbQs) {
+        while (exist.includes(rand)) {
+          rand = Math.floor(Math.random() * arr.length);
+        }
+        exist.push(rand);
+        test = arr[rand];
+        test.n = k;
+        k++;
+        tempArr.push(test);
+      }
+      return tempArr;
+    },
     calcGrade() {
       let CA = 0;
       let WA = 0;
@@ -231,12 +274,11 @@ export default {
       this.answer = null;
     }
   },
-  beforeMount() {
-    this.steps = this.nbQs;
-  },
   mounted() {
-    this.$nextTick(function(x) {
+    this.$nextTick(function() {
+      this.steps = this.nbQs;
       this.ready = true;
+      this.NewQuiz = this.shuffle(this.questions);
     });
   }
 };
