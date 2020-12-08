@@ -62,6 +62,7 @@ import navBar from "@/components/admin/navBar.vue";
 import loader from "@/components/loader.vue";
 import Axios from "axios";
 import { API_URL } from "@/store/consts";
+Axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   components: {

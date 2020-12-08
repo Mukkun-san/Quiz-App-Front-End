@@ -56,8 +56,9 @@
 <script>
 import navBar from "@/components/navbar.vue";
 
-import axios from "axios";
+import Axios from "axios";
 import { API_URL } from "@/store/consts";
+Axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   components: {
@@ -87,8 +88,7 @@ export default {
           password: this.password
         };
         this.loading = true;
-        axios
-          .post(API_URL + "/student/login", data)
+        Axios.post(API_URL + "/student/login", data)
           .then(res => {
             this.loading = false;
             if (res.data.authorized) {

@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import Axios from "axios";
 import { API_URL } from "@/store/consts";
 
 export default {
@@ -77,8 +77,7 @@ export default {
           password: this.password
         };
         this.loading = true;
-        axios
-          .post(API_URL + "/admin/login", data)
+        Axios.post(API_URL + "/admin/login", data)
           .then(res => {
             this.loading = false;
             this.msg = res.data.msg;
