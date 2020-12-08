@@ -122,8 +122,7 @@ export default {
           class: this.classGroup
         };
         this.loading = true;
-        axios
-          .post(API_URL + "/student/signup", data)
+        Axios.post(API_URL + "/student/signup", data)
           .then(res => {
             console.log(res.data);
             this.loading = false;

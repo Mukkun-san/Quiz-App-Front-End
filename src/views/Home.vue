@@ -18,6 +18,15 @@
           :email="student.email"
           :name="student.name"
         />
+        <br />
+        <v-row>
+          <v-btn
+            class="white--text v-size--large d-block mx-auto"
+            @click="logout"
+            dark
+            >Logout</v-btn
+          >
+        </v-row>
       </div>
     </v-main>
   </div>
@@ -66,6 +75,10 @@ export default {
             this.loading = false;
           });
       }
+    },
+    logout() {
+      window.localStorage.removeItem("student");
+      this.$router.push("/login");
     }
   }
 };
