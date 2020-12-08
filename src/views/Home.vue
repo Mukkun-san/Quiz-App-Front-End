@@ -65,7 +65,11 @@ export default {
       if (nbQs) {
         this.loading = true;
         this.nbQs = nbQs;
-        Axios.get(API_URL + "/sheets/" + this.student.class)
+        Axios.get(API_URL + "/sheets/" + this.student.class, {
+          headers: {
+            // remove headers
+          }
+        })
           .then(res => {
             this.loading = false;
             this.questions = res.data;

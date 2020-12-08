@@ -122,7 +122,11 @@ export default {
           class: this.classGroup
         };
         this.loading = true;
-        Axios.post(API_URL + "/student/signup", data)
+        Axios.post(API_URL + "/student/signup", data, {
+          headers: {
+            // remove headers
+          }
+        })
           .then(res => {
             console.log(res.data);
             this.loading = false;
@@ -151,7 +155,11 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
-      Axios.get(API_URL + "/sheets")
+      Axios.get(API_URL + "/sheets", {
+        headers: {
+          // remove headers
+        }
+      })
         .then(res => {
           const data = res.data;
           this.classes = data[0];
