@@ -31,7 +31,6 @@
 import navBar from "@/components/admin/navBar.vue";
 import Axios from "axios";
 import { API_URL } from "@/store/consts";
-Axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   name: "Requests",

@@ -41,7 +41,6 @@ import quiz from "@/components/quiz.vue";
 
 import Axios from "axios";
 import { API_URL } from "@/store/consts";
-Axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   name: "Home",
@@ -66,11 +65,7 @@ export default {
       if (nbQs) {
         this.loading = true;
         this.nbQs = nbQs;
-        Axios.get(API_URL + "/sheets/" + this.student.class, {
-          headers: {
-            // remove headers
-          }
-        })
+        Axios.get(API_URL + "/sheets/" + this.student.class)
           .then(res => {
             this.loading = false;
             this.questions = res.data;

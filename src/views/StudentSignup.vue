@@ -84,7 +84,6 @@
 import navBar from "@/components/navbar.vue";
 import Axios from "axios";
 import { API_URL } from "@/store/consts";
-Axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 export default {
   components: {
@@ -123,11 +122,7 @@ export default {
           class: this.classGroup
         };
         this.loading = true;
-        Axios.post(API_URL + "/student/signup", data, {
-          headers: {
-            // remove headers
-          }
-        })
+        Axios.post(API_URL + "/student/signup", data)
           .then(res => {
             console.log(res.data);
             this.loading = false;
@@ -156,11 +151,7 @@ export default {
   },
   mounted() {
     this.$nextTick(function() {
-      Axios.get(API_URL + "/sheets", {
-        headers: {
-          // remove headers
-        }
-      })
+      Axios.get(API_URL + "/sheets")
         .then(res => {
           const data = res.data;
           this.classes = data[0];
