@@ -94,7 +94,7 @@ export default {
         });
     },
     reject(e) {
-      Axios.delete(API_URL + "/student/" + e.target.value + "l", {
+      Axios.delete(API_URL + "/student/" + e.target.value, {
         headers: { authorization: window.localStorage.getItem("adminToken") }
       })
         .then(res => {
