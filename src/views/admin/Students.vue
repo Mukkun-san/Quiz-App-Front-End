@@ -10,12 +10,12 @@
           class="elevation-2"
         >
           <template v-slot:item.actions="{ item }">
-            <button>
-              <v-chip class="red lighten-2 white--text">
-                <v-btn text :value="item._id" @click="remove">
-                  Delete
-                </v-btn>
-              </v-chip>
+            <button
+              :value="item._id"
+              @click="remove"
+              class=" link rounded-pill red px-5 mx-3 text-subtitle-1"
+            >
+              Remove
             </button>
           </template>
         </v-data-table>
@@ -46,7 +46,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "Class", value: "class" },
         { text: "Added on", value: "addedOn" },
-        { text: "Actions", value: "actions" }
+        { text: "Actions", value: "actions", align: "center" }
       ],
       requests: []
     };

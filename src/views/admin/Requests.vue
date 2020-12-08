@@ -10,16 +10,20 @@
           class="elevation-2"
         >
           <template v-slot:item.actions="{ item }">
-            <v-chip class="green lighten-2 white--text">
-              <v-btn text
-                ><button :value="item._id" @click="confirm">Confirm</button>
-              </v-btn>
-            </v-chip>
-            <v-chip class="red lighten-2 white--text">
-              <v-btn text>
-                <button :value="item._id" @click="reject">Reject</button>
-              </v-btn>
-            </v-chip>
+            <button
+              :value="item._id"
+              @click="confirm"
+              class=" link rounded-pill green px-5 mx-3 text-subtitle-1"
+            >
+              Confirm
+            </button>
+            <button
+              :value="item._id"
+              @click="reject"
+              class=" link rounded-pill red px-5 mx-3 text-subtitle-1"
+            >
+              Reject
+            </button>
           </template>
         </v-data-table>
       </div>
@@ -49,7 +53,7 @@ export default {
         { text: "Email", value: "email" },
         { text: "Class", value: "class" },
         { text: "Requested on", value: "addedOn" },
-        { text: "Actions", value: "actions" }
+        { text: "Actions", value: "actions", align: "center" }
       ],
       requests: []
     };
@@ -94,6 +98,7 @@ export default {
         });
     },
     reject(e) {
+      console.log(e.target.value);
       Axios.delete(API_URL + "/student/" + e.target.value, {
         headers: { authorization: window.localStorage.getItem("adminToken") }
       })
