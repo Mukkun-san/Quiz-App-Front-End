@@ -9,21 +9,24 @@
           :items-per-page="5"
           class="elevation-2"
         >
-          <template v-slot:item.actions="{ item }">
-            <button
-              :value="item._id"
-              @click="confirm"
-              class=" link rounded-pill green px-5 mx-3 text-subtitle-1"
-            >
-              Confirm
-            </button>
-            <button
-              :value="item._id"
-              @click="reject"
-              class=" link rounded-pill red px-5 mx-3 text-subtitle-1"
-            >
-              Reject
-            </button>
+          <template v-slot:item="{ item }">
+            <td>
+              {{ item.name }}
+            </td>
+            <td>
+              {{ item.email }}
+            </td>
+            <td>{{ item.class }}</td>
+            <td>{{ item.addedOn | formatDate }}</td>
+            <td>
+              <button
+                :value="item._id"
+                @click="remove"
+                class="link rounded-pill red px-5 mx-auto text-subtitle-1"
+              >
+                Remove
+              </button>
+            </td>
           </template>
         </v-data-table>
       </div>
@@ -115,6 +118,19 @@ export default {
             .show("Internal Server Error", { type: "error" })
             .goAway(3000);
         });
+    }
+  },
+  filters: {
+    formatDate(d) {
+      if (!d) return "";
+      d = new Date(Number(d));
+      console.log(d);
+      return (
+        d.toLocaleDateString() +
+        " - " +
+        d.toLocaleTimeString().substr(0, 4) +
+        d.toLocaleTimeString().substr(7)
+      );
     }
   }
 };

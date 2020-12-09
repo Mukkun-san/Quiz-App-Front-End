@@ -1,33 +1,30 @@
 <template>
   <v-app-bar app color="#62D969">
-    <v-btn text class="white--text mx-5">
-      <router-link
-        to="/admin/dashboard"
-        style="color:white;text-decoration:none;"
-        >Dashboard</router-link
-      >
-    </v-btn>
+    <router-link to="/admin/dashboard" class="text-decoration-none">
+      <v-btn text class="white--text mx-5">
+        Dashboard
+      </v-btn>
+    </router-link>
+
     <v-spacer class="mx-auto"></v-spacer>
-    <v-btn text class="white--text mx-5">
-      <router-link
-        to="/admin/requests"
-        style="color:white;text-decoration:none;"
-        >Requests</router-link
-      >
-    </v-btn>
-    <v-btn text class="white--text mx-5">
-      <router-link
-        to="/admin/students"
-        style="color:white;text-decoration:none;"
-      >
+    <router-link to="/admin/requests" class="text-decoration-none">
+      <v-btn text class="white--text mx-5">
+        Requests
+      </v-btn>
+    </router-link>
+
+    <router-link to="/admin/students" class="text-decoration-none">
+      <v-btn text class="white--text mx-5">
         Students
-      </router-link>
-    </v-btn>
-    <v-btn text class="white--text mx-5">
-      <router-link to="/admin/grades" style="color:white;text-decoration:none;">
+      </v-btn>
+    </router-link>
+
+    <router-link to="/admin/grades" class="text-decoration-none">
+      <v-btn text class="white--text mx-5">
         Grades
-      </router-link>
-    </v-btn>
+      </v-btn>
+    </router-link>
+
     <v-spacer class="mx-auto"> </v-spacer>
     <v-btn text class="white--text mx-5" @click="logout">
       Logout
