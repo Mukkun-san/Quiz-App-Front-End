@@ -19,6 +19,7 @@
             <v-row>
               <v-col cols="12" md="6" class="mx-auto">
                 <v-text-field
+                  type="password"
                   v-model="password"
                   :rules="passRules"
                   label="Password"
