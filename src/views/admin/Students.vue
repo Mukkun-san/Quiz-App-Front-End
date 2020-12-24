@@ -10,23 +10,25 @@
           class="elevation-2"
         >
           <template v-slot:item="{ item }">
-            <td>
-              {{ item.name }}
-            </td>
-            <td>
-              {{ item.email }}
-            </td>
-            <td>{{ item.class }}</td>
-            <td>{{ item.addedOn | formatDate }}</td>
-            <td>
-              <button
-                :value="item._id"
-                @click="remove"
-                class="link rounded-pill red px-5 mx-auto text-subtitle-1"
-              >
-                Remove
-              </button>
-            </td>
+            <tr>
+              <td>
+                {{ item.name }}
+              </td>
+              <td>
+                {{ item.email }}
+              </td>
+              <td>{{ item.class }}</td>
+              <td>{{ item.addedOn | formatDate }}</td>
+              <td>
+                <button
+                  :value="item._id"
+                  @click="remove"
+                  class="link rounded-pill red px-5 mx-auto text-subtitle-1"
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
           </template>
         </v-data-table>
       </div>
