@@ -21,10 +21,17 @@
             <td>
               <button
                 :value="item._id"
-                @click="remove"
+                @click="accept"
+                class="link rounded-pill green px-5 mx-auto text-subtitle-1"
+              >
+                Accept
+              </button>
+              <button
+                :value="item._id"
+                @click="reject"
                 class="link rounded-pill red px-5 mx-auto text-subtitle-1"
               >
-                Remove
+                Reject
               </button>
             </td>
           </template>
@@ -77,7 +84,7 @@ export default {
     });
   },
   methods: {
-    confirm(e) {
+    accept(e) {
       console.log(e.target.value);
       Axios.post(
         API_URL + "/student/confirm",
