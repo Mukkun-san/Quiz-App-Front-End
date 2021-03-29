@@ -56,7 +56,7 @@ export default {
   },
   data: () => ({
     valid: false,
-    email: "",
+    email: "webmagic2mcq@gmail.com",
     emailRules: [
       v => !!v || "E-mail is required",
       v =>
@@ -64,7 +64,7 @@ export default {
           v
         ) || "E-mail must be valid"
     ],
-    password: "",
+    password: "Anil_258",
     passRules: [v => !!v || "Password is required"],
     msg: "",
     msgStyle: "",
