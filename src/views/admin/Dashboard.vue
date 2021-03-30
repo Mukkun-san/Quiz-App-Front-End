@@ -3,6 +3,20 @@
     <nav-bar></nav-bar>
     <loader v-if="loading" />
     <v-main v-else>
+      <v-row>
+        <v-col>
+          <a
+            href="https://docs.google.com/spreadsheets/d/1q_QzlenVYyTuPGDbudIy1vQvFnOhEYJZZecocIwZsKI/edit#gid=178018846"
+            style="color:white;text-decoration:none;"
+          >
+            <v-alert dense type="info">
+              Open Associated Speadsheet.
+            </v-alert>
+          </a>
+        </v-col>
+      </v-row>
+
+      <br />
       <v-row justify="space-around">
         <v-card class="mx-auto" max-width="300" outlined elevation="5">
           <v-list-item three-line>
