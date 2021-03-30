@@ -2,6 +2,14 @@
   <div>
     <nav-bar></nav-bar>
     <v-main>
+      <v-col style="float:right;">
+        <a href="/admin" style="text-decoration:none;float:right;">
+          <v-btn depressed color="warning" class="mx-5">
+            ADMIN DASHBOARD
+          </v-btn>
+        </a>
+      </v-col>
+
       <v-card class="mx-auto elevation-5 mt-15 card">
         <v-form v-model="valid">
           <v-container class="mx-auto">
